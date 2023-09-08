@@ -1,4 +1,25 @@
 #!/bin/bash
+NC='\e[0m'
+DEFBOLD='\e[39;1m'
+RB='\e[31;1m'
+GB='\e[32;1m'
+YB='\e[33;1m'
+BB='\e[34;1m'
+MB='\e[35;1m'
+CB='\e[35;1m'
+WB='\e[37;1m'
+PB='\e[0;35m'
+uptime=$(uptime -p | cut -d " " -f 2-10)
+DATE=$(date -R | cut -d " " -f -4)
+MYIP=$(curl -sS ipv4.icanhazip.com)
+IPVPS=$(curl -s ipinfo.io/ip)
+domain="$(cat /phantom/params | grep -w "installSubDomain" | awk -F"=" '{print $2}' | awk -F"\"" '{print $2}')"
+ISP=$(curl -s "https://ipinfo.io/$IPVPS/org" | awk -F' ' '{print $2}')
+ISP=$(echo $ISP | tr -d ',')
+tram=$(free -m | awk 'NR==2 {print $2}')
+uram=$(free -m | awk 'NR==2 {print $3}')
+ttoday="$(vnstat -i eth0 | grep "today" | awk '{print $8" "substr ($9, 1, 1)}')"
+tmon="$(vnstat -m | grep `date +%G-%m` | awk '{print $8" "substr ($9, 1 ,3)}')"
 
 ssh-panel() {
 	while true; do
@@ -265,24 +286,37 @@ while true; do
 	n=9
 	clear
 	echo ""
-	echo "phantom V1 Menu Script"
-	echo ""
-	echo "[1] SSH Panel"
-	echo "[2] Xray Panel"
-	echo "[3] WireGuard Panel"
-	echo "[4] Speedtest"
-	echo "[5] Benchmark"
-	echo "[6] Web directory login"
-	echo "[7] Check VPN Status"
-	echo "[8] Update scripts"
-	echo "[9] Update packages"
-	echo ""
-	echo "[x] Exit"
+echo -e "${GB}═══════════════════════════════════════════════════════${NC}"
+echo -e "${GB}      ${WB}───[ Moded Script By JsPhantom @ 2023 ]───                  ${GB}${NC} "
+echo -e "${GB}═══════════════════════════════════════════════════════${NC}"
+echo -e " ${YB}Service Provider${NC}     ${WB}: $ISP"
+echo -e " ${YB}Kernel	              ${WB}: ${WB}$(uname -r)${NC}"
+echo -e " ${YB}Date${NC}                 ${WB}: $DATE${NC}"
+echo -e " ${YB}System Uptime${NC}        ${WB}: $uptime${NC}"
+echo -e " ${YB}Domain${NC}               ${WB}: ${PB}$domain${NC}"
+echo -e " ${YB}IP Address           ${WB}: ${NC}$IPVPS${NC}"
+echo -e " ${YB}Memory Usage         ${WB}: ${NC}${GB}$uram MB ${NC}/ ${RB}$tram ${WB}MB${NC}"
+echo -e " ${YB}Bandwidth Data Usage ${WB}: ${GB}$ttoday Daily${NC}/${RB}$tmon ${WB}Monthly${NC}"    
+echo -e "${GB}═══════════════════════════════════════════════════════${NC}"
+echo -e "${GB}                  ${WB}───[ Main Menu ]───${NC}                  ${GB}${NC} "
+echo -e "${GB}═══════════════════════════════════════════════════════${NC}"
+echo -e "${GB} ${MB}[${NC}01${MB}]${NC} ${YB}SSH Panel${NC}    ${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}02${MB}]${NC} ${YB}Xray Panel${NC}    ${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}03${MB}]${NC} ${YB}WireGuard Panel${NC}${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}04${MB}]${NC} ${YB}Speedtest${NC}    ${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}05${MB}]${NC} ${YB}Benchmark${NC}    ${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}06${MB}]${NC} ${YB}Web directory login${NC}   ${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}07${MB}]${NC} ${YB}Check VPN Status${NC}${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}08${MB}]${NC} ${YB}Update scripts${NC}    ${GB}${NC}"
+echo -e "${GB} ${MB}[${NC}09${MB}]${NC} ${YB}Update packages${NC}    ${GB}${NC}"
+echo -e "${GB}═══════════════════════════════════════════════════════${NC}"
 	echo ""
 	until [[ $choice -ge 1 ]] && [[ $choice -le $n ]] || [[ $choice == "x" ]]; do
 		read -p "Choose option : " choice
 		if [[ $choice -lt 1 ]] || [[ $choice -gt $n ]]; then
 			[[ $choice != "x" ]] && echo "[ERROR] Invalid choice."
+      sleep 1
+      menu
 		fi
 	done
 	case $choice in
@@ -329,10 +363,6 @@ while true; do
 		9)
 			clear
 			(/phantom/menu/other/update_package.sh)
-			;;
-		x)
-			clear
-			break
 			;;
 	esac
 done
