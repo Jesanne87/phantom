@@ -643,7 +643,7 @@ find /phantom/cron/ -type f -exec chmod +x {} \;
 # Configure Profile
 echo "[INFO] Configure Profile"
 sleep 1
-echo -e "\n# Print system information on login\nclear\menu" >> .profile
+echo -e "\n# Print system information on login\menu" >> .profile
 
 # Cleanup
 echo "[INFO] Cleanup"
