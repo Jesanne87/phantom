@@ -20,7 +20,7 @@ clear
 IP=$(wget -qO- icanhazip.com);
 date=$(date +"%Y-%m-%d")
 
-itoken='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'
+itoken='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'
 
 MYIP=$(curl -sS ipv4.icanhazip.com)
 #NameUser=$(curl -sS https://raw.githubusercontent.com/msi8888/allow/main/accessmenu | grep $MYIP | awk '{print $2}')
