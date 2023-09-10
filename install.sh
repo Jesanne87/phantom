@@ -18,14 +18,14 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Check OS
-#source '/etc/os-release'
-#if [[ "${ID}" != "debian" || "${VERSION_ID}" -lt "11" ]]; then
-#	echo -e "\nThis script is only for Debian 11 and newer.\n"
-#	read -n 1 -r -s -p $"Press any key to continue ... "
-#	rm -f install.sh
-#	cat /dev/null > ~/.bash_history
-#	exit 1
-#fi
+source '/etc/os-release'
+if [[ "${ID}" != "debian" || "${VERSION_ID}" -lt "11" ]]; then
+	echo -e "\nThis script is only for Debian 11 and newer.\n"
+	read -n 1 -r -s -p $"Press any key to continue ... "
+	rm -f install.sh
+	cat /dev/null > ~/.bash_history
+	exit 1
+fi
 
 # Check virtualization
 virt=$(systemd-detect-virt)
@@ -78,8 +78,7 @@ if [ "$installDNS" = "cf" ]; then
 		echo "[ERROR] CLoudFlare token is not valid."
 		read -n 1 -r -s -p $"Press any key to continue ... "
 		exit 1
-	fi
-  #installCFToken="lGWlf2w0EkPc81QJwcZuL5X-2fqnI6K4m--3WUpA"
+ 	fi
 	domainList=($(curl -sX GET "https://api.cloudflare.com/client/v4/zones" -H "Authorization: Bearer $installCFToken" -H "Content-Type:application/json" | jq -r '.result[].name'))
 	if [[ -z "$domainList" ]]; then
 	echo "[ERROR] No domains found on Cloudflare."
@@ -472,7 +471,7 @@ chmod -R 755 /etc/letsencrypt/archive/
 bash -c "$(curl -sL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /etc/apt/trusted.gpg.d/nginx-official-repo.gpg
 echo "# Nginx Official Repo
-deb [signed-by=/etc/apt/trusted.gpg.d/nginx-official-repo.gpg] http://nginx.org/packages/debian ${VERSION_CODENAME} nginx" > /etc/apt/sources.list.d/kontol.list
+deb [signed-by=/etc/apt/trusted.gpg.d/nginx-official-repo.gpg] http://nginx.org/packages/debian ${VERSION_CODENAME} nginx" >> /etc/apt/sources.list.d/kontol.list
 apt update
 apt install -y nginx
 rm -f /etc/nginx/conf.d/*
