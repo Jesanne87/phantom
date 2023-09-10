@@ -323,7 +323,7 @@ echo "[INFO] Install OpenVPN"
 sleep 2
 curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/openvpn-public-repo.gpg
 echo "# OpenVPN Public Repo
-deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/openvpn-public-repo.gpg] https://build.openvpn.net/debian/openvpn/stable ${VERSION_CODENAME} main"
+deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/openvpn-public-repo.gpg] https://build.openvpn.net/debian/openvpn/stable ${VERSION_CODENAME} main" > /etc/apt/sources.list.d/kontol.list
 apt update
 apt install -y openvpn
 apt remove -y easy-rsa
@@ -472,7 +472,7 @@ chmod -R 755 /etc/letsencrypt/archive/
 bash -c "$(curl -sL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /etc/apt/trusted.gpg.d/nginx-official-repo.gpg
 echo "# Nginx Official Repo
-deb [signed-by=/etc/apt/trusted.gpg.d/nginx-official-repo.gpg] http://nginx.org/packages/debian ${VERSION_CODENAME} nginx"
+deb [signed-by=/etc/apt/trusted.gpg.d/nginx-official-repo.gpg] http://nginx.org/packages/debian ${VERSION_CODENAME} nginx" > /etc/apt/sources.list.d/kontol.list
 apt update
 apt install -y nginx
 rm -f /etc/nginx/conf.d/*
